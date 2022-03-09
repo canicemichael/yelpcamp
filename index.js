@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 
 const port = process.env.PORT || 3000;
@@ -7,6 +8,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
+
+main().catch(err => console.log(err));
+
+async function main() {
+    await mongoose.connect('mongodb+srv://canice:<password>@cluster0.anmxw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+}
 
 let campgrounds = [
     {name: "Salmon Creek", image: "https://media.istockphoto.com/photos/motor-home-and-sunset-picture-id1321202626?b=1&k=20&m=1321202626&s=170667a&w=0&h=-Xggj1lySaS1HQvEXBTy2Ba4_rPUEyR3nt40les3ues="},
