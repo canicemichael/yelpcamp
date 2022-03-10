@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const Campground = require('./models/campground');
+const seedDB = require('./seeds');
 const app = express();
 
 const port = process.env.PORT || 3000;
@@ -12,14 +14,7 @@ app.set("view engine", "ejs");
 mongoose.connect("mongodb+srv://canice:canice@cluster0.anmxw.mongodb.net/yelp-camp?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(()=> console.log('DB connection successful'))
 
-const campgroundSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
-
-const Campground = mongoose.model('Campground', campgroundSchema);
-
+seedDB();
 
 app.get('/', (req, res) => {
     res.render("landing");
@@ -46,7 +41,7 @@ app.get("/campgrounds/new", (req, res) => {
 });
 
 app.get("/campgrounds/:id", (req, res) => {
-    Campground.findById(req.params.id, (err, foundCampground) => {
+    Campground.findById(req.params.id).populate("comments").exec((err, foundCampground) => {
         if(err){
             console.log('err: ' + err);
         } else {
