@@ -15,7 +15,7 @@ mongoose.connect("mongodb+srv://canice:canice@cluster0.anmxw.mongodb.net/yelp-ca
 const campgroundSchema = new mongoose.Schema({
     name: String,
     image: String,
-    describtion: String
+    description: String
 });
 
 const Campground = mongoose.model('Campground', campgroundSchema);
@@ -31,7 +31,6 @@ app.get("/campgrounds", (req, res) => {
             console.log('error: ' + err);
         }else {
             res.render("index", {campgrounds: camps});
-            console.log(camps);
         }
     });
 });
@@ -47,8 +46,13 @@ app.get("/campgrounds/new", (req, res) => {
 });
 
 app.get("/campgrounds/:id", (req, res) => {
-    const camp = Campground.findById(req.params.id);
-    res.render('show');
+    Campground.findById(req.params.id, (err, foundCampground) => {
+        if(err){
+            console.log('err: ' + err);
+        } else {
+            res.render("show", {campground: foundCampground});
+        }
+    });
 })
 
 app.listen(port, () => {

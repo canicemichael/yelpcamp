@@ -11,11 +11,11 @@
 
     <div class="row">
         <% campgrounds.forEach((campground)=>{ %>
-            <div class="col col-md-3 col-sm-6 ">
+            <div class="col col-md-3 col-sm-6 text-center">
                 <div class="mb-4 border border-3">
                     <img src="<%= campground.image %>" class="img-thumbnail">
                     <div class="text-center"><h4><%= campground.name %></h4></div>
-                    <p><a href="btn btn-info">More info</a></p>
+                    <p><a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More info</a></p>
                 </div>
             </div>
         <% }); %>
