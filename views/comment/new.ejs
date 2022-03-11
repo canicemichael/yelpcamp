@@ -1,8 +1,23 @@
 <%- include ('../partials/header') %>
 
+
 <div class="container-lg">
-    <h1>This is the new comment route</h1>
+    <div class="text-center"><h1>Add New Comment to <%= campground.name %></h1></div>
+    
+    <div class="p-5"> 
+        <form action="/campgrounds/<%= campground._id %>/comment" method="POST">
+            <div class="mb-3 form-group">
+                <input type="text" class="form-control" name="comment[text]" placeholder="comment">
+            </div>
+            <div class="mb-3 form-group">
+                <input type="text" class="form-control" name="comment[author]" placeholder="author">
+            </div>
+            <button type="submit" class="btn btn-outline-info btn-lg">Add comment</button>
+        </form>
+    </div>    
+    
 </div>
+
 
 
 <%- include ('../partials/footer') %>
