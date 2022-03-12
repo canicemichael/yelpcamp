@@ -1,8 +1,8 @@
 <%- include ('../partials/header') %>
 
 <div class="container-lg">
-    <div class="row">
-        <div class="col-sm-3">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-3">
             <h3>Yelp Camp</h3>
             <ul class="list-group">
                 <li class="list-group-item active">Category 1</li>
@@ -11,35 +11,36 @@
                 <li class="list-group-item">Category 4</li>
             </ul>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-auto col-lg-9">
             <div class="card mb-3">
                 <img src="<%= campground.image %>" class="card-img-top" alt="a camp image">
                 <div class="card-body">
                     <div class="row"><div class="col"><h5 style="display: inline;" class=""><%= campground.name %></h5></div><div class="col"><h5 class="text-end">$10.98</h5></div></div>
-                    <div><p><%= campground.description %></p></div>
-                    
+                    <div><p><%= campground.description %></p></div>                    
                 </div>
             </div>
             <div class="container-lg mt-3 p-3 bg-light">
                 <div class="text-end">
                     <a href="/campgrounds/<%= campground._id %>/comment/new" class="btn btn-success btn-small">Leave a review</a>
                 </div>
+                <hr>
+                <div>
+                    <div class="d-flex flex-column align-items-left">
+                        <% campground.comments.forEach(function(comment){ %>                            
+                            <div class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %></strong></span><span><%= comment.text %></span></div>                                         
+                        <% })%>
+                    </div>                    
+                    <div class="ms-auto">10 days ago</div>
+                </div>
             </div>
         </div>
     </div>
+    <!-- <div class="row">
+        <div class="col-sm-12">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates harum, cum, repellat inventore adipisci libero esse, asperiores accusamus ut at provident alias reiciendis distinctio. Iure dolorum quod laboriosam aspernatur vel.</div>
+        <div class="col">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequatur nostrum excepturi perferendis nobis in explicabo aut animi officia, nemo et vitae odit cumque adipisci molestiae repudiandae ipsam. Animi, tempore exercitationem?</div>
+    </div> -->
 </div>
 
-
-
-
-
-
-
-<% campground.comments.forEach(function(comment){ %>
-    <p>
-        <strong><%= comment.author %></strong>: <%= comment.text %>
-    </p>
-<% })%>
 
 
 
