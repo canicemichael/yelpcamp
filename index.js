@@ -3,9 +3,12 @@ const mongoose = require('mongoose');
 const Campground = require('./models/campground');
 const {Comment} = require('./models/comment');
 const seedDB = require('./seeds');
+const dotenv = require('dotenv');
 const app = express();
 
 const port = process.env.PORT || 3000;
+
+dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
