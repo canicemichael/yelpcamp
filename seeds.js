@@ -40,9 +40,13 @@ function seedDB(){
                     } else {
                         // console.log("added a campgroumd");
                         //add a few comments
+                        let ts = Date.now();
+                        let date_ob = new Date(ts);
+                        let datt = date_ob.getDate();
                         Comment.create({
                             text: "This place is great but i wish there was internet",
-                            author: "Homer"
+                            author: "Homer",
+                            date: `${datt}`
                         }, function(err, comment){
                             if(err){
                                 console.log(err);

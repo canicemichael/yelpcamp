@@ -24,14 +24,47 @@
                     <a href="/campgrounds/<%= campground._id %>/comment/new" class="btn btn-success btn-small">Leave a review</a>
                 </div>
                 <hr>
-                <div>
+                <!-- <div class="d-flex justify-content-between">
                     <div class="d-flex flex-column align-items-left">
-                        <% campground.comments.forEach(function(comment){ %>                            
-                            <div class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %></strong></span><span><%= comment.text %></span></div>                                         
-                        <% })%>
+
                     </div>                    
-                    <div class="ms-auto">10 days ago</div>
-                </div>
+                    <div class="ms-auto">
+
+                    </div>
+                </div> -->
+                <table class="table">
+                    <!-- <thead>
+                        <tr>
+                            <th scope="row">
+                                <% campground.comments.forEach(function(comment){ %>                            
+                                    <div class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %><%= comment.date %></strong></span><span><%= comment.text %></span></div>                                         
+                                    <span class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %></strong></span><span><%= comment.text %></span></span>
+                                <% })%>
+                            </th>
+                            <th scope="col" class="">
+                                <% campground.comments.forEach(function(comment){ %>                            
+                                    <strong><%= comment.date %> days ago</strong>
+                                <% })%>
+                            </th>
+                        </tr>
+                    </thead> -->
+                    <tbody>
+                        <tr>
+                            <!-- <th scope="row"></th> -->
+                            <th scope="row">
+                                <% campground.comments.forEach(function(comment){ %>                            
+                                    <!-- <div class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %><%= comment.date %></strong></span><span><%= comment.text %></span></div>                                          -->
+                                    <span class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %></strong></span><span><%= comment.text %></span></span>
+                                <% })%>
+                            </th>
+                            <td>
+                                <% campground.comments.forEach(function(comment){ %>                            
+                                    <strong class="d-flex flex-column bd-highlight mb-3 mt-3"><%= comment.date %> days ago</strong>
+                                <% })%>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

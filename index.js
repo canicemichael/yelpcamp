@@ -66,13 +66,19 @@ app.get("/campgrounds/:id/comment/new", (req, res) => {
     })    
 });
 
-app.post("/campgrounds/:id/comment", (req, res) => {
+app.post("/campgrounds/:id/comment", async (req, res) => {
     Campground.findById(req.params.id, function(err, campground){
         if(err){
             console.log(err);
             res.redirect('/campgrounds');
         } else {
             Comment.create(req.body.comment, function(err, comment){
+                let ts = Date.now();
+                let date_ob = new Date(ts);
+                let datt = date_ob.getDate();
+                
+                comment.date = datt;
+                // console.log(comment);
                 campground.comments.push(comment);
                 campground.save();
                 res.redirect('/campgrounds/' + campground._id);
@@ -82,5 +88,5 @@ app.post("/campgrounds/:id/comment", (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log('Yelp Camp Server has started!');
+    console.log(`Yelp Camp Server has started! at ${port}`);
 })
