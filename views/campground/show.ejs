@@ -24,47 +24,65 @@
                     <a href="/campgrounds/<%= campground._id %>/comment/new" class="btn btn-success btn-small">Leave a review</a>
                 </div>
                 <hr>
-                <!-- <div class="d-flex justify-content-between">
-                    <div class="d-flex flex-column align-items-left">
 
-                    </div>                    
-                    <div class="ms-auto">
+                <% campground.comments.forEach(function(comment){ %>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <%= comment.author %>
+                            <span class="float-end">10 days ago</span>
+                            <p>
+                                <%= comment.text %>
+                            </p>
+                        </div>
+                    </div>
+                <% }) %>
 
+
+
+
+
+
+
+
+        
+                
+                <!-- <div class="mt-5">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-md-12">
+                            <div class="card v p-3">
+                                <div><img src="https://i.imgur.com/hczKIze.jpg" width="30" class="user-img rounded-circle mr-2"></div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="row user d-flex flex-row align-items-center">
+                                        <div class="col-md-10">
+                                            <span>
+                                                <small class="fw-bold text-primary ps-2">
+                                                    john
+                                                </small> 
+                                                <small class="fw-bold">Hmm, This poster looks cool Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis beatae laudantium nam corrupti incidunt quas omnis consequuntur voluptates animi doloremque adipisci eligendi dolor eius delectus iste, dignissimos expedita vitae placeat.</small>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-2 text-end"><small>2 days ago</small></div>
+                                    </div>
+                                </div>
+                                <div class="action d-flex justify-content-between mt-2 align-items-center">
+                                    <div class="reply px-4"> <small>Remove</small> <span class="dots"></span> <small>Reply</small> <span class="dots"></span> <small>Translate</small> </div>
+                                    <div class="icons align-items-center"> <i class="fa fa-star text-warning"></i> <i class="fa fa-check-circle-o check-icon"></i> </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="card v p-3 mt-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="user d-flex flex-row align-items-center"> <img src="https://i.imgur.com/ZSkeqnd.jpg" width="30" class="user-img rounded-circle mr-2"> <span><small class="fw-bold text-primary px-2">simona_rnasi</small> <small class="fw-bold text-primary">@macky_lones</small> <small class="fw-bold text-primary">@rashida_jones</small> <small class="font-weight-bold">Thanks </small></span> </div> <small>3 days ago</small>
+                                </div>
+                                <div class="action d-flex justify-content-between mt-2 align-items-center">
+                                    <div class="reply px-4"> <small>Remove</small> <span class="dots"></span> <small>Reply</small> <span class="dots"></span> <small>Translate</small> </div>
+                                    <div class="icons align-items-center"> <i class="fa fa-check-circle-o check-icon text-primary"></i> </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div> -->
-                <table class="table">
-                    <!-- <thead>
-                        <tr>
-                            <th scope="row">
-                                <% campground.comments.forEach(function(comment){ %>                            
-                                    <div class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %><%= comment.date %></strong></span><span><%= comment.text %></span></div>                                         
-                                    <span class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %></strong></span><span><%= comment.text %></span></span>
-                                <% })%>
-                            </th>
-                            <th scope="col" class="">
-                                <% campground.comments.forEach(function(comment){ %>                            
-                                    <strong><%= comment.date %> days ago</strong>
-                                <% })%>
-                            </th>
-                        </tr>
-                    </thead> -->
-                    <tbody>
-                        <tr>
-                            <!-- <th scope="row"></th> -->
-                            <th scope="row">
-                                <% campground.comments.forEach(function(comment){ %>                            
-                                    <!-- <div class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %><%= comment.date %></strong></span><span><%= comment.text %></span></div>                                          -->
-                                    <span class="d-flex flex-column bd-highlight mb-3"><span><strong><%= comment.author %></strong></span><span><%= comment.text %></span></span>
-                                <% })%>
-                            </th>
-                            <td>
-                                <% campground.comments.forEach(function(comment){ %>                            
-                                    <strong class="d-flex flex-column bd-highlight mb-3 mt-3"><%= comment.date %> days ago</strong>
-                                <% })%>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
