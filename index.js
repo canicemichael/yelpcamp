@@ -6,12 +6,15 @@ const seedDB = require('./seeds');
 const dotenv = require('dotenv');
 const app = express();
 
+const authRoute = require('./routes/auth');;
+
 const port = process.env.PORT || 3000;
 
 dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/api/auth', authRoute);
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
