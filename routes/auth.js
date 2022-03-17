@@ -3,7 +3,12 @@ const { User, validateUser } = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-//REGISTER
+//show REGISTER form
+router.get('/register', (req, res) => {
+    res.render('register');
+});
+
+//REGISTER 
 router.post('/register', async(req, res) => {
     const {error} = validateUser(req.body);
     if (error) return res.status(400).json(error.details[0].message);
@@ -19,16 +24,21 @@ router.post('/register', async(req, res) => {
     await newUser.save();
 
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    res.status(201).redirect('/campgrounds');
+});
+
+//show login form
+router.get('/login', (req, res) => {
+    res.render('login');
 });
 
 //LOGIN
 router.post('/login', async(req, res) => {
     const user = await User.findOne({username: req.body.username});
-    !user && res.status(401).json('wrong credentials')
+    if (!user) return res.redirect('/api/auth/login');
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.status(400).json('invalid username or password');
+    if (!validPassword) return res.redirect('/api/auth/login');
 
     const accessToken = jwt.sign(
         {
@@ -42,6 +52,18 @@ router.post('/login', async(req, res) => {
     const { password, ...others } = user._doc;
 
     res.status(200).json({...others, accessToken});
-})
+});
+
+//logout
+router.get('/logout', (req, res) => {
+    res.cookie('token', 'none', {
+        httpOnly: true
+    });
+
+    res.status(200).json({
+        success: true,
+        data: {},
+    });
+});
 
 module.exports = router;

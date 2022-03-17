@@ -4,6 +4,7 @@ const Campground = require('./models/campground');
 const {Comment} = require('./models/comment');
 const seedDB = require('./seeds');
 const dotenv = require('dotenv');
+const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require('./middleware/verifyToken');
 const app = express();
 
 const authRoute = require('./routes/auth');;
@@ -28,7 +29,7 @@ app.get('/', (req, res) => {
     res.render("landing");
 });
 
-app.get("/campgrounds", (req, res) => {
+app.get("/campgrounds",  (req, res) => {
     Campground.find({}, (err, camps) => {
         if(err){
             console.log('error: ' + err);
@@ -38,13 +39,13 @@ app.get("/campgrounds", (req, res) => {
     });
 });
 
-app.post("/campgrounds", async (req, res) => {
+app.post("/campgrounds",  async (req, res) => {
     const camps = new Campground(req.body);
     await camps.save();
     res.redirect('/campgrounds');
 });
 
-app.get("/campgrounds/new", (req, res) => {
+app.get("/campgrounds/new",  (req, res) => {
     res.render("campground/new");
 });
 
