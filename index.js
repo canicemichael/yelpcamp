@@ -59,7 +59,7 @@ app.get('/local/signup', (req, res) => {
 });
 
 app.post('/auth/local/signup', async(req, res) => {
-    const { first_name, last_name, email, password } = req.body;
+    const { user_name, email, password, isAdmin } = req.body;
     console.log("got here1");
     if(password.length < 8) {
         req.flash("error", "Account not created. Password must be 7+ characters long");
@@ -72,12 +72,13 @@ app.post('/auth/local/signup', async(req, res) => {
         await UserService.addLocalUser({
             id: uuid.v4(),
             email,
-            firstName: first_name,
-            lastName: last_name,
+            userName: user_name,
+            isAdmin,
             password: hashedPassword
         })
     } catch (e) {
         req.flash("error", "Error creating a new account. Try again")
+        console.log(e);
         return res.redirect("/local/signup")
     }
 
