@@ -1,11 +1,11 @@
 const passport = require("passport");
-const User = require("../../models/user");
+const {userModel, validateUser} = require("../../models/user");
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
-    const currentUser = await User.findOne({id});
+    const currentUser = await userModel.findOne({id});
     done(null, currentUser);
 });

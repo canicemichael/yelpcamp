@@ -10,7 +10,7 @@ const flash = require("express-flash");
 const session = require("express-session");
 const uuid = require("uuid");
 const bcrypt = require('bcrypt');
-const UserService = require("../models/user.index");
+const UserService = require("./models/user.index");
 
 const Campground = require('./models/campground');
 const {Comment} = require('./models/comment');
