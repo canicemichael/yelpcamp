@@ -1,45 +1,122 @@
+require("dotenv").config();
+
 const express = require('express');
+const app = express();
+const cookieParser = require("cookie-parser");
 const mongoose = require('mongoose');
-// passport usage
+
 const passport = require("passport");
-const LocalStrategy = require("passport-local");
-const User = require("./models/user");
+const flash = require("express-flash");
+const session = require("express-session");
+const uuid = require("uuid");
+const bcrypt = require('bcrypt');
+const UserService = require("../models/user.index");
+
 const Campground = require('./models/campground');
 const {Comment} = require('./models/comment');
 const seedDB = require('./seeds');
-const dotenv = require('dotenv');
-const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require('./middleware/verifyToken');
-const app = express();
-
-const authRoute = require('./routes/auth');;
-
 const port = process.env.PORT || 3000;
+// const authRoute = require('./routes/auth');
 
-dotenv.config();
+require("./src/config/passport");
+require("./src/config/google");
+require("./src/config/local");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/api/auth', authRoute);
-
-app.set("view engine", "ejs");
-app.use(express.static(__dirname + "/public"));
-
-mongoose.connect("mongodb+srv://canice:canice@cluster0.anmxw.mongodb.net/yelp-camp?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(()=> console.log('DB connection successful'))
 
 seedDB();
 
-//PASSPORT CONFIGURATION
-app.use(require("express-session")({
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
+
+app.use(cookieParser());
+// app.use('/api', authRoute);
+app.use(
+    session({
     secret: "secr3t",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: true
 }));
+
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+
+app.get("/", (req, res) => {
+    res.render("landing");
+})
+
+const isLoggedIn = (req, res, next) => {
+    req.user ? next() : res.sendStatus(401);
+};
+
+app.get('/local/signup', (req, res) => {
+    res.render('local/signup.ejs');
+});
+
+app.post('/auth/local/signup', async(req, res) => {
+    const { first_name, last_name, email, password } = req.body;
+    console.log("got here1");
+    if(password.length < 8) {
+        req.flash("error", "Account not created. Password must be 7+ characters long");
+        return res.redirect("/local/signup");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+    console.log("got here2");
+    try {
+        await UserService.addLocalUser({
+            id: uuid.v4(),
+            email,
+            firstName: first_name,
+            lastName: last_name,
+            password: hashedPassword
+        })
+    } catch (e) {
+        req.flash("error", "Error creating a new account. Try again")
+        return res.redirect("/local/signup")
+    }
+
+    return res.status(201).redirect('/local/signin');
+});
+
+app.get('/local/signin', (req, res) => {
+    res.render('local/signin.ejs');
+});
+
+//LOGIN
+app.post('/auth/local/signin',
+    passport.authenticate('local', {
+        successRedirect: '/campground/index',
+        failureRedirect: '/local/signin',
+        failureFlash: true
+    })
+);
+
+app.get('/auth/logout', (req, res) => {
+    req.flash("success", "Successfully logged out");
+    req.session.destroy(function (){
+        res.clearCookie("connect.sid");
+        res.redirect("/");
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get('/', (req, res) => {
     res.render("landing");
@@ -55,7 +132,7 @@ app.get("/campgrounds",  (req, res) => {
     });
 });
 
-app.post("/campgrounds",  async (req, res) => {
+app.post("/campgrounds", isLoggedIn, async (req, res) => {
     const camps = new Campground(req.body);
     await camps.save();
     res.redirect('/campgrounds');
@@ -73,7 +150,7 @@ app.get("/campgrounds/:id", (req, res) => {
             res.render("campground/show", {campground: foundCampground});
         }
     });
-})
+});
 
 
 // =================================
@@ -110,29 +187,6 @@ app.post("/campgrounds/:id/comment", async (req, res) => {
     })
 });
 
-// ==============================
-// AUTH ROUTES
-// ==============================
-
-//  show register form
-app.get("/register", (req, res) => {
-    res.render("register");
-});
-
-// handle signup logic
-app.post("/register", (req, res) => {
-    // registering user logic here
-});
-
-// show login form
-app.get("/login", (req, res) => {
-    res.render("login");
-});
-
-// handling login logic
-app.post("/login", (req, res) => {
-    // login logic happens here
-})
 
 app.listen(port, () => {
     console.log(`Yelp Camp Server has started! at ${port}`);
