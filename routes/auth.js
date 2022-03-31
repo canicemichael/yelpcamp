@@ -3,66 +3,63 @@ const { User, validateUser } = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+app.get("/", (req, res) => {
+    res.render("landing");
+})
+
 //show REGISTER form
-router.get('/register', (req, res) => {
-    res.render('register');
+router.get('/local/signup', (req, res) => {
+    res.render('local/signup.ejs');
 });
 
 //REGISTER 
-router.post('/register', async(req, res) => {
+router.post('/auth/local/signup', async(req, res) => {
     const {error} = validateUser(req.body);
     if (error) return res.status(400).json(error.details[0].message);
 
-    const newUser = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-    });
+    const {username, email, password} = req.body;
 
-    const salt = await bcrypt.genSalt(10);
-    newUser.password = await bcrypt.hash(newUser.password, salt);
-    await newUser.save();
+    if(password.length < 8) {
+        req.flash("error", "Account not created. Password must be 7+ characters long");
+        return res.redirect("/local/signup");
+    }
 
-    const savedUser = await newUser.save();
-    res.status(201).redirect('/campgrounds');
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    try {
+        await UserService.addLocalUser({
+            username: username,
+            email: email,
+            password: hashedPassword
+        })
+    } catch (e) {
+        req.flash("error", "Error creating a new account. Try again")
+        return res.redirect("/local/signup")
+    }
+
+    return res.status(201).redirect('/campgrounds');
 });
 
 //show login form
-router.get('/login', (req, res) => {
-    res.render('login');
+router.get('/local/signin', (req, res) => {
+    res.render('local/signin.ejs');
 });
 
 //LOGIN
-router.post('/login', async(req, res) => {
-    const user = await User.findOne({username: req.body.username});
-    if (!user) return res.redirect('/api/auth/login');
-
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.redirect('/api/auth/login');
-
-    const accessToken = jwt.sign(
-        {
-            id: user._id,
-            isAdmin: user.isAdmin
-        },
-        process.env.JWT_SEC,
-        {expiresIn: '3d'}
-    );
-
-    const { password, ...others } = user._doc;
-
-    res.status(200).json({...others, accessToken});
-});
+router.post('/auth/local/signin',
+    passport.authenticate('local', {
+        successRedirect: '/campgrounds',
+        failureRedirect: '/local/signin',
+        failureFlash: true
+    })
+);
 
 //logout
-router.get('/logout', (req, res) => {
-    res.cookie('token', 'none', {
-        httpOnly: true
-    });
-
-    res.status(200).json({
-        success: true,
-        data: {},
+router.get('/auth/logout', (req, res) => {
+    req.flash("success", "Successfully logged out");
+    req.session.destroy(function (){
+        res.clearCookie("connect.sid");
+        res.redirect("/");
     });
 });
 

@@ -1,5 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// passport usage
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user");
 const Campground = require('./models/campground');
 const {Comment} = require('./models/comment');
 const seedDB = require('./seeds');
@@ -24,6 +28,18 @@ mongoose.connect("mongodb+srv://canice:canice@cluster0.anmxw.mongodb.net/yelp-ca
     .then(()=> console.log('DB connection successful'))
 
 seedDB();
+
+//PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "secr3t",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
 
 app.get('/', (req, res) => {
     res.render("landing");
@@ -92,6 +108,30 @@ app.post("/campgrounds/:id/comment", async (req, res) => {
             })
         }
     })
+});
+
+// ==============================
+// AUTH ROUTES
+// ==============================
+
+//  show register form
+app.get("/register", (req, res) => {
+    res.render("register");
+});
+
+// handle signup logic
+app.post("/register", (req, res) => {
+    // registering user logic here
+});
+
+// show login form
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+// handling login logic
+app.post("/login", (req, res) => {
+    // login logic happens here
 })
 
 app.listen(port, () => {

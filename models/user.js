@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+let passportLocalMongoose = require("passport-local-mongoose");
 
-const UserSchema = new mongoose.Schema({
+let UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -19,8 +20,11 @@ const UserSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
+    },
+    source: {type:String, required: [true, "source not specified"]},
 }, { timestamps: true });
+
+UserSchema.plugin(passportLocalMongoose);
 
 const User = mongoose.model('User', UserSchema);
 
