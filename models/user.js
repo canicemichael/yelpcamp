@@ -4,10 +4,6 @@ const Joi = require('joi');
 let Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    id: {
-        type: String,
-        default: null
-    },
     userName: {
         type: String,
         required: [true, "username required"],
@@ -44,5 +40,5 @@ const validateUser = (data) => {
     return schema.validate(data);
 }
 
-exports.userModel = userModel;
-exports.validateUser = validateUser;
+module.exports = userModel;
+// exports.validateUser = validateUser;

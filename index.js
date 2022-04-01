@@ -60,14 +60,14 @@ app.get('/local/signup', (req, res) => {
 
 app.post('/auth/local/signup', async(req, res) => {
     const { user_name, email, password, isAdmin } = req.body;
-    console.log("got here1");
+    
     if(password.length < 8) {
         req.flash("error", "Account not created. Password must be 7+ characters long");
         return res.redirect("/local/signup");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    console.log("got here2");
+    
     try {
         await UserService.addLocalUser({
             id: uuid.v4(),
@@ -77,8 +77,7 @@ app.post('/auth/local/signup', async(req, res) => {
             password: hashedPassword
         })
     } catch (e) {
-        req.flash("error", "Error creating a new account. Try again")
-        console.log(e);
+        req.flash("error", "Error creating a new account. Try again")        
         return res.redirect("/local/signup")
     }
 
@@ -92,7 +91,7 @@ app.get('/local/signin', (req, res) => {
 //LOGIN
 app.post('/auth/local/signin',
     passport.authenticate('local', {
-        successRedirect: '/campground/index',
+        successRedirect: '/campgrounds',
         failureRedirect: '/local/signin',
         failureFlash: true
     })

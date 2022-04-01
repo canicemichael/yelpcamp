@@ -1,8 +1,6 @@
-const { userModel } = require("./user")
-
-const addGoogleUser = (User) => ({ username, email, password, isAdmin }) => {
+const addGoogleUser = (User) => ({ userName, email, password, isAdmin }) => {
     const user = new User({
-        username, email, password, isAdmin, source: "google"
+        userName, email, password, isAdmin, source: "google"
     })
     return user.save()
 }
@@ -16,7 +14,7 @@ const getUserByEmail = (User) => async ({ email }) => {
 }
 
 const addLocalUser = (User) => ({ userName, email, password, isAdmin }) => {    
-    const user = new userModel({
+    const user = new User({
         userName, email, password, isAdmin, source: "local"
     })
     return user.save()
