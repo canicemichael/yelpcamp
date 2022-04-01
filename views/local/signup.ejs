@@ -15,6 +15,10 @@
                 <input type="password" class="form-control" name="password" placeholder="password">
             </div>
             <button type="submit" class="btn btn-outline-info btn-lg">Submit!</button>
+
+            <% if ( messages.error) { %>
+              <p style="color: red;"><%= messages.error %></p>
+            <% } %>
         </form>
     </div>
 </div>

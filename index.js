@@ -46,12 +46,17 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+});
+
 app.get("/", (req, res) => {
     res.render("landing");
 })
 
 const isLoggedIn = (req, res, next) => {
-    req.user ? next() : res.sendStatus(401);
+    req.user ? next() : res.redirect('/local/signin');
 };
 
 app.get('/local/signup', (req, res) => {
@@ -59,7 +64,7 @@ app.get('/local/signup', (req, res) => {
 });
 
 app.post('/auth/local/signup', async(req, res) => {
-    const { user_name, email, password, isAdmin } = req.body;
+    const { user_name, email, password } = req.body;
     
     if(password.length < 8) {
         req.flash("error", "Account not created. Password must be 7+ characters long");
@@ -69,11 +74,9 @@ app.post('/auth/local/signup', async(req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10)
     
     try {
-        await UserService.addLocalUser({
-            id: uuid.v4(),
+        await UserService.addLocalUser({            
             email,
-            userName: user_name,
-            isAdmin,
+            userName: user_name,            
             password: hashedPassword
         })
     } catch (e) {
@@ -127,7 +130,7 @@ app.get("/campgrounds",  (req, res) => {
         if(err){
             console.log('error: ' + err);
         }else {
-            res.render("campground/index", {campgrounds: camps});
+            res.render("campground/index", {campgrounds: camps, currentUser: req.user});
         }
     });
 });
@@ -138,7 +141,7 @@ app.post("/campgrounds", isLoggedIn, async (req, res) => {
     res.redirect('/campgrounds');
 });
 
-app.get("/campgrounds/new",  (req, res) => {
+app.get("/campgrounds/new", isLoggedIn, (req, res) => {
     res.render("campground/new");
 });
 
@@ -156,7 +159,7 @@ app.get("/campgrounds/:id", (req, res) => {
 // =================================
 // COMMENT SECTION
 // =================================
-app.get("/campgrounds/:id/comment/new", (req, res) => {
+app.get("/campgrounds/:id/comment/new", isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, function(err,campground){
         if(err){
             console.log(err);
@@ -166,7 +169,7 @@ app.get("/campgrounds/:id/comment/new", (req, res) => {
     })    
 });
 
-app.post("/campgrounds/:id/comment", async (req, res) => {
+app.post("/campgrounds/:id/comment", isLoggedIn, async (req, res) => {
     Campground.findById(req.params.id, function(err, campground){
         if(err){
             console.log(err);
