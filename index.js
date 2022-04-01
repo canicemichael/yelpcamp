@@ -8,15 +8,13 @@ const mongoose = require('mongoose');
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
-const uuid = require("uuid");
-const bcrypt = require('bcrypt');
-const UserService = require("./models/user.index");
 
-const Campground = require('./models/campground');
-const {Comment} = require('./models/comment');
 const seedDB = require('./seeds');
 const port = process.env.PORT || 3000;
-// const authRoute = require('./routes/auth');
+
+const authRoute = require('./routes/auth');
+const campgroundRoute = require('./routes/campground');
+const commentRoute = require('./routes/comment');
 
 require("./src/config/passport");
 require("./src/config/google");
@@ -51,144 +49,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get("/", (req, res) => {
-    res.render("landing");
-})
-
-const isLoggedIn = (req, res, next) => {
-    req.user ? next() : res.redirect('/local/signin');
-};
-
-app.get('/local/signup', (req, res) => {
-    res.render('local/signup.ejs');
-});
-
-app.post('/auth/local/signup', async(req, res) => {
-    const { user_name, email, password } = req.body;
-    
-    if(password.length < 8) {
-        req.flash("error", "Account not created. Password must be 7+ characters long");
-        return res.redirect("/local/signup");
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10)
-    
-    try {
-        await UserService.addLocalUser({            
-            email,
-            userName: user_name,            
-            password: hashedPassword
-        })
-    } catch (e) {
-        req.flash("error", "Error creating a new account. Try again")        
-        return res.redirect("/local/signup")
-    }
-
-    return res.status(201).redirect('/local/signin');
-});
-
-app.get('/local/signin', (req, res) => {
-    res.render('local/signin.ejs');
-});
-
-//LOGIN
-app.post('/auth/local/signin',
-    passport.authenticate('local', {
-        successRedirect: '/campgrounds',
-        failureRedirect: '/local/signin',
-        failureFlash: true
-    })
-);
-
-app.get('/auth/logout', (req, res) => {
-    req.flash("success", "Successfully logged out");
-    req.session.destroy(function (){
-        res.clearCookie("connect.sid");
-        res.redirect("/");
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.get('/', (req, res) => {
-    res.render("landing");
-});
-
-app.get("/campgrounds",  (req, res) => {
-    Campground.find({}, (err, camps) => {
-        if(err){
-            console.log('error: ' + err);
-        }else {
-            res.render("campground/index", {campgrounds: camps, currentUser: req.user});
-        }
-    });
-});
-
-app.post("/campgrounds", isLoggedIn, async (req, res) => {
-    const camps = new Campground(req.body);
-    await camps.save();
-    res.redirect('/campgrounds');
-});
-
-app.get("/campgrounds/new", isLoggedIn, (req, res) => {
-    res.render("campground/new");
-});
-
-app.get("/campgrounds/:id", (req, res) => {
-    Campground.findById(req.params.id).populate("comments").exec((err, foundCampground) => {
-        if(err){
-            console.log('err: ' + err);
-        } else {
-            res.render("campground/show", {campground: foundCampground});
-        }
-    });
-});
-
-
-// =================================
-// COMMENT SECTION
-// =================================
-app.get("/campgrounds/:id/comment/new", isLoggedIn, (req, res) => {
-    Campground.findById(req.params.id, function(err,campground){
-        if(err){
-            console.log(err);
-        } else {
-            res.render("comment/new", { campground: campground });
-        }
-    })    
-});
-
-app.post("/campgrounds/:id/comment", isLoggedIn, async (req, res) => {
-    Campground.findById(req.params.id, function(err, campground){
-        if(err){
-            console.log(err);
-            res.redirect('/campgrounds');
-        } else {
-            Comment.create(req.body.comment, function(err, comment){
-                let ts = Date.now();
-                let date_ob = new Date(ts);
-                let datt = date_ob.getDate();
-                
-                comment.date = datt;
-                // console.log(comment);
-                campground.comments.push(comment);
-                campground.save();
-                res.redirect('/campgrounds/' + campground._id);
-            })
-        }
-    })
-});
+app.use("/", authRoute);
+app.use("/campgrounds", campgroundRoute);
+app.use("/campgrounds/:id/comment", commentRoute);
 
 
 app.listen(port, () => {

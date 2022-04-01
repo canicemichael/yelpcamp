@@ -28,41 +28,39 @@ const data = [
 function seedDB(){
     //Remove all campgrounds
     Campground.deleteMany({}, function(err){
-        if(err){
-            console.log(err);
-        } else {
-            // console.log("removed campgrounds!");
-            //add a few campgrounds
-            data.forEach(function(seed){
-                Campground.create(seed, function(err, campground){
-                    if(err){
-                        console.log(err);
-                    } else {
-                        // console.log("added a campgroumd");
-                        //add a few comments
-                        let ts = Date.now();
-                        let date_ob = new Date(ts);
-                        let datt = date_ob.getDate();
-                        Comment.create({
-                            text: "This place is great but i wish there was internet",
-                            author: "Homer",
-                            date: `${datt}`
-                        }, function(err, comment){
-                            if(err){
-                                console.log(err);
-                            } else {
-                                campground.comments.push(comment);
-                                campground.save();
-                                // console.log("Created new comment");
-                            }
-                        });
-                    }
-                });
-            });
-        }
-    });
-    
-    
+    //     if(err){
+    //         console.log(err);
+    //     } else {
+    //         // console.log("removed campgrounds!");
+    //         //add a few campgrounds
+    //         data.forEach(function(seed){
+    //             Campground.create(seed, function(err, campground){
+    //                 if(err){
+    //                     console.log(err);
+    //                 } else {
+    //                     // console.log("added a campgroumd");
+    //                     //add a few comments
+    //                     let ts = Date.now();
+    //                     let date_ob = new Date(ts);
+    //                     let datt = date_ob.getDate();
+    //                     Comment.create({
+    //                         text: "This place is great but i wish there was internet",
+    //                         author: "Homer",
+    //                         date: `${datt}`
+    //                     }, function(err, comment){
+    //                         if(err){
+    //                             console.log(err);
+    //                         } else {
+    //                             campground.comments.push(comment);
+    //                             campground.save();
+    //                             // console.log("Created new comment");
+    //                         }
+    //                     });
+    //                 }
+    //             });
+    //         });
+    //     }
+    });    
 }
 
 module.exports = seedDB;
