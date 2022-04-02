@@ -23,7 +23,7 @@ require("./src/config/local");
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(()=> console.log('DB connection successful'))
 
-seedDB();
+// seedDB(); // seed the database
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
