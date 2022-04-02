@@ -57,4 +57,9 @@ router.get('/auth/logout', (req, res) => {
     });
 });
 
+// middleware
+const isLoggedIn = (req, res, next) => {
+    req.user ? next() : res.redirect('/local/signin');
+};
+
 module.exports = router;

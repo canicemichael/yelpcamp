@@ -31,6 +31,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
+//middleware
 const isLoggedIn = (req, res, next) => {
     req.user ? next() : res.redirect('/local/signin');
 };

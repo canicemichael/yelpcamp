@@ -21,18 +21,24 @@ router.post("/", async (req, res) => {
             Comment.create(req.body.comment, function(err, comment){
                 let ts = Date.now();
                 let date_ob = new Date(ts);
-                let datt = date_ob.getDate();
-                
+                let datt = date_ob.getDate();                
                 comment.date = datt;
-                // console.log(comment);
+                
+                // add username and id to comment
+                comment.author.id = req.user._id;
+                comment.author.username = req.user.userName;
+                // save comment
+                comment.save();
                 campground.comments.push(comment);
                 campground.save();
+                console.log(comment);
                 res.redirect('/campgrounds/' + campground._id);
             })
         }
     })
 });
 
+//middleware
 const isLoggedIn = (req, res, next) => {
     req.user ? next() : res.redirect('/local/signin');
 };

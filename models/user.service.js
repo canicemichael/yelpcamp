@@ -9,6 +9,10 @@ const getUsers = (User) => () => {
     return User.find({})
 }
 
+const getUserByUsername = (User) => async ({userName}) => {
+    return await User.findOne({userName})
+}
+
 const getUserByEmail = (User) => async ({ email }) => {
     return await User.findOne({ email })
 }
@@ -25,6 +29,7 @@ module.exports = (User) => {
         addLocalUser: addLocalUser(User),
         addGoogleUser: addGoogleUser(User),
         getUsers: getUsers(User),
-        getUserByEmail: getUserByEmail(User)
+        getUserByEmail: getUserByEmail(User),
+        getUserByUsername: getUserByUsername(User)
     }
 }
