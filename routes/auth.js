@@ -36,11 +36,12 @@ router.post('/auth/local/signup', async(req, res) => {
     return res.status(201).redirect('/local/signin');
 });
 
+// show login form
 router.get('/local/signin', (req, res) => {
     res.render('local/signin.ejs');
 });
 
-//LOGIN
+// LOGIN
 router.post('/auth/local/signin',
     passport.authenticate('local', {
         successRedirect: '/campgrounds',

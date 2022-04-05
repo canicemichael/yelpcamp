@@ -25,21 +25,21 @@
             <!-- navbar links -->
             <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
                 <ul class="navbar-nav">
-                    <% if(!currentUser) { %>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="/local/signin">Login</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/local/signup">Sign Up</a>
-                    </li> 
-                    <% } else { %>
+                    </li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Signed In As <%= currentUser.userName %></a>
+                        <a class="nav-link" href="#">Signed In As </a>
                     </li> 
                     <li class="nav-item">
                         <a class="nav-link" href="/auth/logout">Logout</a>
                     </li> 
-                    <% } %>
+                    
                     <!-- <li class="nav-item d-md-none">
                         <a class="nav-link" href="#pricing">Pricing</a>
                     </li>

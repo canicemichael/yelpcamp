@@ -4,9 +4,10 @@ const LocalStrategy = require("passport-local").Strategy;
 const UserService = require('../../models/user.index');
 const bcrypt = require('bcrypt');
 
+
 passport.use(new LocalStrategy(
-    async function (email, password, done) {
-        const currentUser = await UserService.getUserByEmail({email})
+    async function (email, password, done) {        
+        const currentUser = await UserService.getUserByEmail({email})        
 
         if (!currentUser) {
             return done(null, false, { message: `User with email ${email} does not exist` });
