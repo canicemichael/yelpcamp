@@ -1,15 +1,16 @@
 <%- include ('../partials/header') %>
 
+
 <div class="container-lg">
     <h1>login</h1>
 
     <div class="p-5">
         <form action="/auth/local/signin" method="post">
             <div class="mb-3 form-group">
-                <input type="email" class="form-control" name="username" placeholder="example@gmail.com">
+                <input type="text" class="form-control" name="username" placeholder="example@gmail.com" id="username">
             </div>
             <div class="mb-3 form-group">
-                <input type="password" class="form-control" name="password" placeholder="password">
+                <input type="password" class="form-control" name="password" placeholder="password" id="password">
             </div>
             <button type="submit" class="btn btn-outline-info btn-lg">Submit!</button>
 
@@ -19,5 +20,6 @@
         </form>
     </div>
 </div>
+
 
 <%- include ('../partials/footer') %>

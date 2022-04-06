@@ -1,6 +1,5 @@
 <%- include ('../partials/header') %>
 
-
 <div class="container-lg">
     <div class="container-lg bg-info p-4 mb-5 rounded">
         <h1>Welcome to YelpCamp!</h1>
@@ -14,13 +13,13 @@
                 <div class="mb-4 border border-3">
                     <img src="<%= campground.image %>" class="img-thumbnail">
                     <div class="text-center"><h4><%= campground.name %></h4></div>
+                    <div><%= user.email %> </div>
                     <p><a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More info</a></p>
                 </div>
             </div>
         <% }); %>
     </div>
 </div>
-
 
 
 <%- include ('../partials/footer') %>

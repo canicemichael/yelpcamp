@@ -29,10 +29,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
+app.engine("html", require("ejs").renderFile);
 app.use(express.static(__dirname + "/public"));
 
 app.use(cookieParser());
-// app.use('/api', authRoute);
 app.use(
     session({
     secret: "secr3t",
@@ -45,15 +45,18 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use((req, res, next) => {
-//     res.locals.currentUser = req.user;
-//     next();
-// });
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
 
 app.use("/", authRoute);
 app.use("/campgrounds", campgroundRoute);
 app.use("/campgrounds/:id/comment", commentRoute);
 
+app.get("/profile", (req, res) => {
+    res.render("profile.ejs", { user: req.user });
+})
 
 app.listen(port, () => {
     console.log(`Yelp Camp Server has started! at ${port}`);

@@ -39,8 +39,10 @@ router.post("/", async (req, res) => {
 });
 
 //middleware
-const isLoggedIn = (req, res, next) => {
-    req.user ? next() : res.redirect('/local/signin');
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/local/signin');
+    // req.user ? next() : res.redirect('/local/signin');
 };
 
 module.exports = router;

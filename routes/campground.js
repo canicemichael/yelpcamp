@@ -1,17 +1,17 @@
 const router = require("express").Router();
 const Campground = require('../models/campground');
 
-router.get("/",  (req, res) => {
+router.get("/", isLoggedIn, (req, res) => {
     Campground.find({}, (err, camps) => {
         if(err){
             console.log('error: ' + err);
         }else {        
-            res.render("campground/index", {campgrounds: camps});
+            res.render("campground/index", {campgrounds: camps, user: req.user});
         }
     });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", isLoggedIn, async (req, res) => {
     let name = req.body.name;
     let image = req.body.image;
     let desc = req.body.description;
@@ -35,11 +35,11 @@ router.post("/", async (req, res) => {
     // res.redirect('/campgrounds');
 });
 
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("campground/new");
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", isLoggedIn, (req, res) => {
     Campground.findById(req.params.id).populate("comments").exec((err, foundCampground) => {
         if(err){
             console.log('err: ' + err);
@@ -50,8 +50,10 @@ router.get("/:id", (req, res) => {
 });
 
 //middleware
-const isLoggedIn = (req, res, next) => {
-    req.user ? next() : res.redirect('/local/signin');
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/local/signin');
+    // req.user ? next() : res.redirect('/local/signin');
 };
 
 module.exports = router;
