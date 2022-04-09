@@ -62,3 +62,7 @@ body {
     color: green;
     cursor: pointer
 }
+
+#delete-form {
+    display: inline-block;
+}
