@@ -26,6 +26,7 @@ router.post("/", isLoggedIn, async (req, res) => {
         if(err){
             console.log(err);
         } else {
+            console.log(newlyCreated);
             res.redirect('/campgrounds');
         }
     });
@@ -47,6 +48,28 @@ router.get("/:id", isLoggedIn, (req, res) => {
             res.render("campground/show", {campground: foundCampground});
         }
     });
+});
+
+// EDIT CAMPGROUND ROUTE
+router.get("/:id/edit", (req, res) => {
+    Campground.findById(req.params.id, function(err, foundCampground) {
+        if (err){
+            res.redirect('/campgrounds');
+        } else{
+            res.render("campground/edit", {campground: foundCampground});
+        }
+    });    
+});
+
+// UPDATE CAMPGROUND ROUTE
+router.put("/:id", (req, res) => {
+    Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+        if(err){
+            res.redirect("/campgrounds");
+        } else {
+            res.redirect("/campgrounds/" + req.params.id);
+        }
+    })
 });
 
 //middleware

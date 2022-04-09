@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 const passport = require("passport");
 const flash = require("express-flash");
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 
 app.use(cookieParser());
 app.use(

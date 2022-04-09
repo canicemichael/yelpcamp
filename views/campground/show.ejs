@@ -17,7 +17,8 @@
                 <img src="<%= campground.image %>" class="card-img-top" alt="a camp image">
                 <div class="card-body">
                     <div class="row"><div class="col"><h5 style="display: inline;" class=""><%= campground.name %></h5></div><div class="col"><h5 class="text-end">$10.98</h5></div></div>
-                    <div><p><%= campground.description %></p></div>                    
+                    <div><p><%= campground.description %></p></div>
+                    <div><em><p>Submitted By <%= campground.author.username %> </p></em></div>
                 </div>
             </div>
             <div class="container-lg mt-3 p-3 bg-light">
