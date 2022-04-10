@@ -1,6 +1,7 @@
 const router = require("express").Router({mergeParams: true});
 const Campground = require('../models/campground');
 const {Comment} = require('../models/comment');
+const { isLoggedIn, checkCommentOwnership } = require('../middleware/index');
 
 router.get("/new", (req, res) => {
     Campground.findById(req.params.id, function(err,campground){
@@ -71,31 +72,5 @@ router.delete("/:comment_id", checkCommentOwnership, function(req, res){
     });
 });
 
-
-//middleware
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect('/local/signin');
-    // req.user ? next() : res.redirect('/local/signin');
-};
-
-function checkCommentOwnership(req, res, next){
-    if(req.isAuthenticated()){
-        Comment.findById(req.params.comment_id, function(err, foundComment){
-            if(err){
-                res.redirect("back");
-            } else {
-                // does user own the comment
-                if(foundComment.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-        })
-    } else {
-        res.redirect("back");
-    }
-}
 
 module.exports = router;
