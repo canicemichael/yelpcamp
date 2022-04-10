@@ -20,7 +20,7 @@
                     <div><p><%= campground.description %></p></div>
                     <div><em><p>Submitted By <%= campground.author.username %> </p></em></div>
 
-                    <% if(campground.author.id.equals(user._id) ){ %>
+                    <% if(user && campground.author.id.equals(user._id) ){ %>
                     <a class="btn btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
                     <form id="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
                         <button type="submit" class="btn btn-danger">Delete</button>
@@ -31,7 +31,7 @@
             </div>
             <div class="container-lg mt-3 p-3 bg-light">
                 <div class="text-end">
-                    <a href="/campgrounds/<%= campground._id %>/comment/new" class="btn btn-success btn-small">Leave a review</a>
+                    <a href="/campgrounds/<%= campground._id %>/comments/new" class="btn btn-success btn-small">Leave a review</a>
                 </div>
                 <hr>
 
@@ -43,6 +43,14 @@
                             <p>
                                 <%= comment.text %>
                             </p>
+
+                            <% if(user && comment.author.id.equals(user._id) ){ %>
+                            <a href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit" class="btn btn-xs btn-warning">Edit</a>
+                            <form id="delete-form" action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=DELETE" method="post">
+                                <input type="submit" value="Delete" class="btn btn-xs btn-danger">
+                            </form>
+                            <%= } %>
+                            
                         </div>
                     </div>
                 <% }) %>
