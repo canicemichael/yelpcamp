@@ -7,10 +7,11 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 
 const passport = require("passport");
-const flash = require("express-flash");
+// const flash = require("express-flash");
+const flash = require('connect-flash');
 const session = require("express-session");
 
-const seedDB = require('./seeds');
+// const seedDB = require('./seeds');
 const port = process.env.PORT || 3000;
 
 const authRoute = require('./routes/auth');
@@ -44,11 +45,14 @@ app.use(
 
 
 app.use(flash());
+// app.use(flashco());
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use((req, res, next) => {
     res.locals.user = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
 });
 

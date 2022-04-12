@@ -17,9 +17,6 @@
             </div>
             <button type="submit" class="btn btn-outline-info btn-lg">Submit!</button>
 
-            <% if ( messages.error) { %>
-              <p style="color: red;"><%= messages.error %></p>
-            <% } %>
         </form>
     </div>
 </div>
@@ -63,9 +60,7 @@
         </div>
         <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
 
-        <% if ( messages.error) { %>
-        <p class="error-text"><%= messages.error %></p>
-        <% } %>
+        
 
         <div class="mt-5 mb-3 text-center">
           <a class="text-muted" href="https://saasbase.dev">

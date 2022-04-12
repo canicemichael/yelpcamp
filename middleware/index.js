@@ -1,9 +1,14 @@
+const Campground = require('../models/campground');
+const {Comment} = require('../models/comment');
+// const flash = require('connect-flash');
 let middlewareObj = {};
 
 middlewareObj.isLoggedIn = function(req, res, next) {
     if (req.isAuthenticated()) return next();
+
+    req.flash("error", "Please Login First!");
     res.redirect('/local/signin');
-    // req.user ? next() : res.redirect('/local/signin');
+    
 };
 
 

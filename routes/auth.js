@@ -2,7 +2,6 @@ const router = require("express").Router();
 const bcrypt = require('bcrypt');
 const UserService = require("../models/user.index");
 const passport = require("passport");
-const flash = require("express-flash");
 
 router.get("/", (req, res) => {
     res.render("landing");
@@ -29,7 +28,7 @@ router.post('/auth/local/signup', async(req, res) => {
             password: hashedPassword
         })
     } catch (e) {
-        req.flash("error", "Error creating a new account. Try again")        
+        req.flash("error", "Error creating a new account. User already exists");
         return res.redirect("/local/signup")
     }
 
