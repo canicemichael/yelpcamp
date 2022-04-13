@@ -28,10 +28,10 @@ router.post('/auth/local/signup', async(req, res) => {
             password: hashedPassword
         })
     } catch (e) {
-        req.flash("error", "Error creating a new account. User already exists");
+        req.flash("error", e.message);
         return res.redirect("/local/signup")
     }
-
+    req.flash("success", "SignUp Successful");
     return res.status(201).redirect('/local/signin');
 });
 
@@ -50,18 +50,11 @@ router.post('/auth/local/signin',
 );
 
 router.get('/auth/logout', (req, res) => {
-    req.flash("success", "Successfully logged out");
-    req.session.destroy(function (){
-        res.clearCookie("connect.sid");
-        res.redirect("/");
+     req.flash("success", "Successfully logged out");
+     req.session.destroy(function (){
+        res.clearCookie("connect.sid");        
+        res.redirect("/local/signin");
     });
 });
-
-// middleware
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect('/local/signin');
-    // req.user ? next() : res.redirect('/local/signin');
-};
 
 module.exports = router;

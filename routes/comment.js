@@ -20,6 +20,9 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
             res.redirect('/campgrounds');
         } else {
             Comment.create(req.body.comment, function(err, comment){
+                if (err){
+                    req.flash("error", "Something went wrong");
+                } else {
                 let ts = Date.now();
                 let date_ob = new Date(ts);
                 let datt = date_ob.getDate();                
@@ -33,7 +36,9 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
                 campground.comments.push(comment);
                 campground.save();
                 console.log(comment);
+                req.flash("success", "Successfully added comment");
                 res.redirect('/campgrounds/' + campground._id);
+                }
             })
         }
     })
@@ -67,6 +72,7 @@ router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, re
         if(err){
             res.redirect("back");
         } else {
+            req.flash("success", "Comment deleted");
             res.redirect("/campgrounds/" + req.params.id);
         }
     });

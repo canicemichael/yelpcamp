@@ -14,13 +14,14 @@ router.get("/", isLoggedIn, (req, res) => {
 
 router.post("/", isLoggedIn, async (req, res) => {
     let name = req.body.name;
+    let price = req.body.price;
     let image = req.body.image;
     let desc = req.body.description;
     let author = {
         id: req.user._id,
         username: req.user.userName
     }
-    let newCamps = {name: name, image: image, description: desc, author: author}
+    let newCamps = {name: name, price: price, image: image, description: desc, author: author}
 
     // Create a new campground and save to DB
     Campground.create(newCamps, (err, newlyCreated) => {

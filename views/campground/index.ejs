@@ -11,9 +11,9 @@
         <% campgrounds.forEach((campground)=>{ %>
             <div class="col col-md-3 col-sm-6 text-center">
                 <div class="mb-4 border border-3">
-                    <img src="<%= campground.image %>" class="img-thumbnail">
+                    <img src="<%= campground.image %>" class="size-img">
                     <div class="text-center"><h4><%= campground.name %></h4></div>
-                    <div><%= user.email %> </div>
+                    
                     <p><a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More info</a></p>
                 </div>
             </div>
