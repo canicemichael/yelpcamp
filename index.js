@@ -1,40 +1,69 @@
+require("dotenv").config();
+
 const express = require('express');
 const app = express();
+const cookieParser = require("cookie-parser");
+const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
+const passport = require("passport");
+// const flash = require("express-flash");
+const flash = require('connect-flash');
+const session = require("express-session");
+
+// const seedDB = require('./seeds');
 const port = process.env.PORT || 3000;
+
+const authRoute = require('./routes/auth');
+const campgroundRoute = require('./routes/campground');
+const commentRoute = require('./routes/comment');
+
+require("./src/config/passport");
+require("./src/config/google");
+require("./src/config/local");
+
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(()=> console.log('DB connection successful'))
+
+// seedDB(); // seed the database
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
+app.engine("html", require("ejs").renderFile);
+app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 
-let campgrounds = [
-    {name: "Salmon Creek", image: "https://media.istockphoto.com/photos/motor-home-and-sunset-picture-id1321202626?b=1&k=20&m=1321202626&s=170667a&w=0&h=-Xggj1lySaS1HQvEXBTy2Ba4_rPUEyR3nt40les3ues="},
-    {name: "Catalynk West", image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FtcHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"},
-    {name: "Ebube Nnenna", image: "https://images.unsplash.com/photo-1492648272180-61e45a8d98a7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8Y2FtcHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"}
-];
+app.use(cookieParser());
+app.use(
+    session({
+    secret: "secr3t",
+    resave: false,
+    saveUninitialized: true
+}));
 
-app.get('/', (req, res) => {
-    res.render("landing");
+
+app.use(flash());
+// app.use(flashco());
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+    next();
 });
 
-app.get("/campgrounds", (req, res) => {
-    res.render("campgrounds", {campgrounds: campgrounds});
-});
+app.use("/", authRoute);
+app.use("/campgrounds", campgroundRoute);
+app.use("/campgrounds/:id/comments", commentRoute);
 
-app.post("/campgrounds", (req, res) => {
-    let name = req.body.name;
-    let image = req.body.image;
-    let newCamp = { name: name, image: image };
-    campgrounds.push(newCamp);
-
-    res.redirect('/campgrounds');
-});
-
-app.get("/campgrounds/new", (req, res) => {
-    res.render("new.ejs");
+app.get("/profile", (req, res) => {
+    res.render("profile.ejs", { user: req.user });
 })
 
 app.listen(port, () => {
-    console.log('Yelp Camp Server has started!');
+    console.log(`Yelp Camp Server has started! at ${port}`);
 })
