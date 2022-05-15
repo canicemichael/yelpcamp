@@ -20,7 +20,22 @@
 2. Create a cloudinary account to get an API key and secret code
 
 ```javascript
-git clone https://github.com/..../YelpCamp.git
+git clone https://github.com/canicemichael/YelpCamp.git
 cd YelpCamp
 npm install
+```
+
+## Built With
+- Node.js - Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine
+- express - Fast, unopinionated, minimalist web framework for Node.js
+- MongoDB - The database for modern applications
+- Mongoose - Elegant MongoDB object modeling for Node.js
+- ejs - Embedded JavaScript templating
+
+Create a .env file (or just export manually in the terminal) in the root of the project and add the following:
+
+```javascript
+DATABASEURL='<url>'
+API_KEY='<key>'
+API_SECRET='<secret>'
 ```
