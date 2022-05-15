@@ -14,3 +14,7 @@
 - Search campground by name or location
 - Sort campgrounds by highest rating, most reviewed, lowest price, or highest price
 
+## Run it locally
+----------
+1. Install mongodb
+2. Create a cloudinary account to get an API key and secret code
