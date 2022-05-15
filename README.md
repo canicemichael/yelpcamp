@@ -1,4 +1,4 @@
-# yelpcamp
+# ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")YelpCamp
 An app for those who loves to explore diffrerent part of life, adventure in the woods, snow and so on.
 Designed and implemented the code structure and MongoDb database for the application, using RestApi and Nodejs
 ============
