@@ -39,3 +39,6 @@ DATABASEURL='<url>'
 API_KEY='<key>'
 API_SECRET='<secret>'
 ```
+
+Run `mongod` in another terminal and `node app.js` in the terminal with the project.
+Then go to localhost:3000.
