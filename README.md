@@ -19,4 +19,17 @@
 1. Install mongodb
 2. Create a cloudinary account to get an API key and secret code
 
-``` npm run sudo code ```
+```javascript
+var s = "JavaScript syntax highlighting";
+alert(s);
+```
+ 
+```python
+s = "Python syntax highlighting"
+print s
+```
+ 
+```
+No language indicated, so no syntax highlighting. 
+But let's throw in a <b>tag</b>.
+```
