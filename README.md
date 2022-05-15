@@ -20,16 +20,7 @@
 2. Create a cloudinary account to get an API key and secret code
 
 ```javascript
-var s = "JavaScript syntax highlighting";
-alert(s);
-```
- 
-```python
-s = "Python syntax highlighting"
-print s
-```
- 
-```
-No language indicated, so no syntax highlighting. 
-But let's throw in a <b>tag</b>.
+git clone https://github.com/..../YelpCamp.git
+cd YelpCamp
+npm install
 ```
